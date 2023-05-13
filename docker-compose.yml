@@ -1,7 +1,9 @@
 version: '2'
 services:
   osmnames:
-    build: .
+    build:
+      context: .
+      network: host
     volumes:
       - .:/osmnames
       - ./data:${DATA_DIR}
