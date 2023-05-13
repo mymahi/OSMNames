@@ -5,14 +5,17 @@ services:
     volumes:
       - .:/osmnames
       - ./data:${DATA_DIR}
+      - type: tmpfs
+        target: /tmp
+        tmpfs:
+          size: 112
     depends_on:
       - postgres
-    tmpfs: /tmp
     env_file: .env
 
   postgres:
     image: postgis/postgis:15-3.3
-    shm_size: 24gb # for processing the world, I increased this to 16g
+    shm_size: 16gb # for processing the world, I increased this to 16g
     environment:
       POSTGRES_HOST_AUTH_METHOD: trust
     ports:
