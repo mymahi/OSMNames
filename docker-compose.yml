@@ -10,7 +10,7 @@ services:
       - type: tmpfs
         target: /tmp
         tmpfs:
-          size: 112
+          size: 112gb
     depends_on:
       - postgres
     env_file: .env
