@@ -10,14 +10,14 @@ services:
       - type: tmpfs
         target: /tmp
         tmpfs:
-          size: 112gb
+          size: 64gb
     depends_on:
       - postgres
     env_file: .env
 
   postgres:
     image: postgis/postgis:15-3.3
-    shm_size: 16gb # for processing the world, I increased this to 16g
+    shm_size: 48gb # for processing the world, I increased this to 16g
     environment:
       POSTGRES_HOST_AUTH_METHOD: trust
     ports:
