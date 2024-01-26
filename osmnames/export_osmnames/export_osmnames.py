@@ -16,7 +16,7 @@ def export_osmnames():
     create_views()
     create_export_dir()
     export_geonames()
-    export_housenumbers()
+    # export_housenumbers()
     gzip_tsv_files()
 
 
@@ -34,7 +34,7 @@ def create_views():
         create_points_view,
         create_linestrings_view,
         create_merged_linestrings_view,
-        create_housenumbers_view
+        # create_housenumbers_view
     )
 
     create_geonames_view()
