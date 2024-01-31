@@ -49,18 +49,22 @@ def exec_sql_from_file(filename, user=settings.get("DB_USER"), database=settings
 
 def modify_sql_with_auto_modulo(sql, parallelism):
     replacement = "\n".join(
-        "\g<1>auto_modulo(\g<2>, {}, {})\g<3>; --&".format(parallelism, i)
+        "\g<1>(\g<2> % {} = {})\g<3>; --&".format(parallelism, i)
         for i in range(0, parallelism)
     )
 
     return re.sub(
         r"""
-            (UPDATE[^;]+?)         # query starting at UPDATE keyword
-            auto_modulo\(          # beginning of auto_modulo function
-                ([A-Z0-9a-z._\s]+) # column name to calculate modulo on
-            \)                     # closing paren of function
-            ([^;]*);               # rest of query until ;
-            \s*(?:--\&)?           # optionally eat --& comment
+            ((?:UPDATE|INSERT)[^;]+?) # query starting at UPDATE/INSERT keyword
+            auto_modulo\(             # beginning of auto_modulo function
+            (                         
+            (?:[A-Z0-9a-z._]+\()?     # possibly wrapped in a function, start
+            [A-Z0-9a-z._\s]+          # column name to calculate modulo on
+            (?:\))?                   # possibly wrapped in a function, end
+            )                         # column name to calculate modulo on
+            \)                        # closing paren of function
+            ([^;]*);                  # rest of query until ;
+            \s*(?:--\&)?              # optionally eat --& comment
         """,
         replacement,
         sql,
