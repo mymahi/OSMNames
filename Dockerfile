@@ -1,4 +1,4 @@
-FROM golang:1.19.3-bullseye
+FROM golang:1.22.5-bullseye
 
 # ARG is only set for the build
 ARG DEBIAN_FRONTEND=noninteractive
@@ -13,6 +13,7 @@ RUN apt-get install -y --no-install-recommends \
       postgresql-client \
       python3-pip \
       python3-dev \
+      aria2 \
 && ln -s /usr/lib/libgeos_c.so /usr/lib/libgeos.so \
 && rm -rf /var/lib/apt/lists/*
 

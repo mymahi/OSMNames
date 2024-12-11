@@ -6,7 +6,7 @@
         {
             "label": "Generate osmnames",
             "type": "shell",
-            "command": "docker-compose run --rm osmnames"
+            "command": "docker compose run --rm osmnames"
         }
     ]
 }
