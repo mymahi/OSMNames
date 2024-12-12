@@ -1,6 +1,6 @@
 import os
 
-from osmnames.export_osmnames.export_osmnames import export_geonames, create_export_dir, create_views
+from osmnames.export_osmnames.export_osmnames import export_geonames, create_export_dir, create_tables, create_views
 
 
 def test_tsv_get_created(session, tables):
@@ -11,6 +11,7 @@ def test_tsv_get_created(session, tables):
             )
         )
     create_export_dir()
+    create_tables()
     create_views()
 
     export_geonames()
