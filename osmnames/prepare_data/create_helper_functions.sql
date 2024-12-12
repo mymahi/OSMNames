@@ -23,12 +23,3 @@ BEGIN
   RETURN names;
 END;
 $$ LANGUAGE plpgsql IMMUTABLE;
-
--- if parallelize=True is set from Python, the caller query will be duplicated
--- to allow parallel execution
-CREATE OR REPLACE FUNCTION auto_modulo(id INT, divisor INT = 1, remain INT = 0)
-RETURNS boolean AS $$
-BEGIN
-  RETURN id % divisor = remain;
-END;
-$$ LANGUAGE plpgsql IMMUTABLE;

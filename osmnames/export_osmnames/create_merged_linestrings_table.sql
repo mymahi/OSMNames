@@ -1,5 +1,32 @@
-DROP MATERIALIZED VIEW IF EXISTS mv_merged_linestrings;
-CREATE MATERIALIZED VIEW mv_merged_linestrings AS
+DROP TABLE IF EXISTS final_merged_linestrings CASCADE;
+CREATE UNLOGGED TABLE final_merged_linestrings (
+    name varchar,
+    alternative_names text,
+    osm_type text,
+    osm_id varchar,
+    class text,
+    type text,
+    lon numeric,
+    lat numeric,
+    place_rank integer,
+    importance double precision,
+    street text,
+    city text,
+    county text,
+    state text,
+    country text,
+    country_code varchar(2),
+    display_name text,
+    west numeric,
+    south numeric,
+    east numeric,
+    north numeric,
+    wikidata text,
+    wikipedia text,
+    housenumbers text
+);
+
+INSERT INTO final_merged_linestrings(name, alternative_names, osm_type, osm_id, class, type, lon, lat, place_rank, importance, street, city, county, state, country, country_code, display_name, west, south, east, north, wikidata, wikipedia, housenumbers)
 SELECT
   name,
   alternative_names,
@@ -28,4 +55,5 @@ SELECT
 FROM
   osm_merged_linestring,
   determine_class(type) AS class,
-  get_parent_info(parent_id, name) as parentInfo;
+  get_parent_info(parent_id, name) as parentInfo
+WHERE auto_modulo(osm_id);

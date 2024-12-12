@@ -1,8 +1,8 @@
 CREATE VIEW geonames_view AS
-  SELECT * FROM mv_polygons
+  SELECT * FROM final_polygons
   UNION ALL
-  SELECT * FROM mv_points
+  SELECT * FROM final_points
   UNION ALL
-  SELECT * FROM mv_linestrings
+  SELECT * FROM final_linestrings
   UNION ALL
-  SELECT * FROM mv_merged_linestrings;
+  SELECT * FROM final_merged_linestrings;

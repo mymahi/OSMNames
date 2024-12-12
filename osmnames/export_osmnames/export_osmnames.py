@@ -13,10 +13,11 @@ log = logger.setup(__name__)
 def export_osmnames():
     create_functions()
     create_indexes()
+    create_tables()
     create_views()
     create_export_dir()
     export_geonames()
-    export_housenumbers()
+    # export_housenumbers()
     gzip_tsv_files()
 
 
@@ -27,33 +28,33 @@ def create_functions():
 def create_indexes():
     exec_sql("CREATE INDEX osm_housenumber_street_id ON osm_housenumber(street_id);")
 
+def create_tables():
+    create_polygons_table()
+    create_points_table()
+    create_linestrings_table()
+    create_merged_linestrings_table()
+
 
 def create_views():
-    run_in_parallel(
-        create_polygons_view,
-        create_points_view,
-        create_linestrings_view,
-        create_merged_linestrings_view,
-        create_housenumbers_view
-    )
+    # create_housenumbers_view()
 
     create_geonames_view()
 
 
-def create_polygons_view():
-    exec_sql_from_file("create_polygons_view.sql", cwd=os.path.dirname(__file__))
+def create_polygons_table():
+    exec_sql_from_file("create_polygons_table.sql", cwd=os.path.dirname(__file__), parallelize=True)
 
 
-def create_points_view():
-    exec_sql_from_file("create_points_view.sql", cwd=os.path.dirname(__file__))
+def create_points_table():
+    exec_sql_from_file("create_points_table.sql", cwd=os.path.dirname(__file__), parallelize=True)
 
 
-def create_linestrings_view():
-    exec_sql_from_file("create_linestrings_view.sql", cwd=os.path.dirname(__file__))
+def create_linestrings_table():
+    exec_sql_from_file("create_linestrings_table.sql", cwd=os.path.dirname(__file__), parallelize=True)
 
 
-def create_merged_linestrings_view():
-    exec_sql_from_file("create_merged_linestrings_view.sql", cwd=os.path.dirname(__file__))
+def create_merged_linestrings_table():
+    exec_sql_from_file("create_merged_linestrings_table.sql", cwd=os.path.dirname(__file__), parallelize=True)
 
 
 def create_housenumbers_view():
@@ -90,7 +91,10 @@ def export_to_tsv(query, path):
 
 
 def gzip_tsv_files():
-    for tsv_file_path in [geonames_export_path(), housenumbers_export_path()]:
+    for tsv_file_path in [
+        geonames_export_path(),
+        #housenumbers_export_path()
+    ]:
         with open(tsv_file_path, 'rb') as f_in, gzip.open("{}.gz".format(tsv_file_path), 'wb') as f_out:
             shutil.copyfileobj(f_in, f_out)
 

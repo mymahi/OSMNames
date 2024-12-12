@@ -1,5 +1,32 @@
-DROP MATERIALIZED VIEW IF EXISTS mv_points;
-CREATE MATERIALIZED VIEW mv_points AS
+DROP TABLE IF EXISTS final_points CASCADE;
+CREATE UNLOGGED TABLE final_points (
+    name varchar,
+    alternative_names text,
+    osm_type text,
+    osm_id varchar,
+    class text,
+    type varchar,
+    lon numeric,
+    lat numeric,
+    place_rank integer,
+    importance double precision,
+    street text,
+    city text,
+    county text,
+    state text,
+    country text,
+    country_code varchar(2),
+    display_name text,
+    west numeric,
+    south numeric,
+    east numeric,
+    north numeric,
+    wikidata text,
+    wikipedia text,
+    housenumbers varchar
+);
+
+INSERT INTO final_points(name, alternative_names, osm_type, osm_id, class, type, lon, lat, place_rank, importance, street, city, county, state, country, country_code, display_name, west, south, east, north, wikidata, wikipedia, housenumbers)
 SELECT
   name,
   alternative_names,
@@ -28,4 +55,5 @@ SELECT
 FROM
   osm_point,
   get_parent_info(parent_id, name) as parentInfo
-WHERE NOT merged;
+WHERE NOT merged
+  AND auto_modulo(osm_id);

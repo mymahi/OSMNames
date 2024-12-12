@@ -23,41 +23,7 @@ tables:
     - key: admin_level
       name: admin_level
       type: integer
-    mapping:
-      highway:
-      - pedestrian
-      - motorway
-      - motorway_link
-      - trunk
-      - trunk_link
-      - primary
-      - primary_link
-      - secondary
-      - secondary_link
-      - tertiary
-      - tertiary_link
-      - unclassified
-      - residential
-      - road
-      - living_street
-      - raceway
-      - construction
-      - track
-      - service
-      - path
-      - cycleway
-      - steps
-      - bridleway
-      - footway
-      - corridor
-      - crossing
-      waterway:
-      - river
-      - riverbank
-      - stream
-      - canal
-      - drain
-      - ditch
+    mapping: {}
   polygon:
     type: polygon
     fields:
@@ -96,21 +62,8 @@ tables:
       - village
       - hamlet
       - island
-      landuse:
-      - residential
-      - reservoir
       boundary:
       - administrative
-      natural:
-      - water
-      - bay
-      - desert
-      highway:
-      - pedestrian
-      railway:
-      - station
-      aeroway:
-      - aerodrome
   point:
     type: point
     fields:
@@ -163,14 +116,6 @@ tables:
       - ocean
       - sea
       - continent
-      natural:
-      - peak
-      - volcano
-      - hill
-      railway:
-      - station
-      aeroway:
-      - aerodrome
   housenumber:
     type: geometry
     fields:
@@ -190,13 +135,7 @@ tables:
     - key: addr:place
       name: place
       type: string
-    type_mappings:
-      points:
-        addr:housenumber:
-        - __any__
-      polygons:
-        addr:housenumber:
-        - __any__
+    type_mappings: {}
   relation:
     type: relation
     columns:
@@ -211,10 +150,10 @@ tables:
     - key: addr:street
       name: street
       type: string
-    mapping:
-      type:
-      - associatedStreet
-      - street
+    - key: null
+      name: all_tags
+      type: hstore_tags
+    mapping: {}
   relation_member:
     type: relation_member
     columns:
@@ -260,17 +199,8 @@ tables:
       - ocean
       - sea
       - continent
-      natural:
-      - peak
-      - volcano
-      - hill
-      landuse:
-      - residential
       boundary:
       - administrative
-      type:
-      - associatedStreet
-      - street
 tags:
   load_all: true
 

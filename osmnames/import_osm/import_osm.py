@@ -23,7 +23,7 @@ def download_pbf():
 
     url = settings.get("PBF_FILE_URL")
     destination_dir = settings.get("IMPORT_DIR")
-    logged_check_call(["wget", "--no-clobber", "--directory-prefix", destination_dir, url])
+    logged_check_call(["aria2c", "-x", "8", "-c", "--auto-file-renaming=false", "--allow-overwrite=false", "--dir", destination_dir, url])
 
 
 def sanatize_for_import():

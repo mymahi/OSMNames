@@ -17,19 +17,25 @@ CREATE VIEW polygons_with_linked_by_relation_node AS (
   INNER JOIN osm_point AS point
     ON point.osm_id = relation.member_id
   WHERE
-  -- include all pairs where on of the following conditions are met
   (
-    lower(relation.role) = 'label'
-    OR lower(relation.role) = 'political'
-    OR (point.wikidata != '' AND point.wikidata = polygon.wikidata)
-    OR (point.wikipedia != '' AND point.wikipedia = polygon.wikipedia)
-    OR get_names(point.all_tags) && get_names(polygon.all_tags)
+    -- include all pairs where on of the following conditions are met
+    (
+      lower(relation.role) = 'label'
+      OR lower(relation.role) = 'political'
+      OR (point.wikidata != '' AND point.wikidata = polygon.wikidata)
+      OR (point.wikipedia != '' AND point.wikipedia = polygon.wikipedia)
+      OR get_names(point.all_tags) && get_names(polygon.all_tags)
+    )
+    -- exclude all pairs where both wiki refs are set but differ
+    AND NOT (
+      (NULLIF(point.wikipedia, '') IS NOT NULL AND NULLIF(polygon.wikipedia, '') IS NOT NULL AND point.wikipedia != polygon.wikipedia)
+      OR
+      (NULLIF(point.wikidata, '') IS NOT NULL AND NULLIF(polygon.wikidata, '') IS NOT NULL AND point.wikidata != polygon.wikidata)
+    )
   )
-  -- exclude all pairs where both wiki refs are set but differ
-  AND NOT (
-    (NULLIF(point.wikipedia, '') IS NOT NULL AND NULLIF(polygon.wikipedia, '') IS NOT NULL AND point.wikipedia != polygon.wikipedia)
-    OR
-    (NULLIF(point.wikidata, '') IS NOT NULL AND NULLIF(polygon.wikidata, '') IS NOT NULL AND point.wikidata != polygon.wikidata)
+  OR (
+    -- if the types match then they're likely to both represent the same location
+    point.type = polygon.type
   )
   ORDER BY point.osm_id, polygon.place_rank DESC
 );
@@ -38,8 +44,8 @@ CREATE VIEW polygons_with_linked_by_relation_node AS (
 UPDATE osm_polygon AS polygon
 SET merged_osm_id = linked_node_osm_id,
     all_tags = polygon.all_tags || linked_node_tags,
-    wikipedia = COALESCE(NULLIF(polygon.wikipedia, ''), linked_node_wikipedia),
-    wikidata = COALESCE(NULLIF(polygon.wikidata, ''), linked_node_wikidata)
+    wikipedia = COALESCE(NULLIF(linked_node_wikipedia, ''), polygon.wikipedia),
+    wikidata = COALESCE(NULLIF(linked_node_wikidata, ''), polygon.wikidata)
 FROM polygons_with_linked_by_relation_node
 WHERE polygon_id = polygon.id;
 
