@@ -33,7 +33,7 @@ def import_wikipedia():
 
 def download_dump(url):
     destination_dir = settings.get("IMPORT_DIR")
-    logged_check_call(["wget", "--no-clobber", "--directory-prefix", destination_dir, url])
+    logged_check_call(["aria2c", "-x", "8", "-c", "--auto-file-renaming=false", "--allow-overwrite=false", "--dir", destination_dir, url])
 
 def restore_wikipedia_articles():
     article_dump_filename = settings.get("WIKIPEDIA_DUMP_URL").split("/")[-1]
