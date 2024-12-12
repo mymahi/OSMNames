@@ -7,6 +7,7 @@ services:
     volumes:
       - .:/osmnames
       - ./data:${DATA_DIR}
+      - /tmp/osmnames:/tmp
     depends_on:
       - postgres
     env_file: .env
@@ -20,6 +21,7 @@ services:
       - "127.0.0.1:5432:5432"
     volumes:
       - ./data/postgres_config.sh:/docker-entrypoint-initdb.d/postgres_config.sh
+      - /tmp/postgres/data:/var/lib/postgresql/data
 
   pgadmin:
     image: dpage/pgadmin4
